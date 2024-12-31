@@ -30,6 +30,9 @@ importers:
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
       typescript-eslint:
         specifier: ^8.19.0
         version: 8.19.0(eslint@9.17.0)(typescript@5.7.2)
