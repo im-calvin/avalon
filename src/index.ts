@@ -11,22 +11,15 @@ const client = new AvalonClient({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages,
     ],
 });
 
 // Bot logs when it's ready
 client.once('ready', () => {
     console.log(`${client.user?.username} is online!`);
-});
-
-// Listen for messages and log the sender's name
-client.on('messageCreate', (message) => {
-    if (!message.member) {
-        // If the message is a DM, stop further execution
-        return;
-    }
-    console.log(`${message.member.displayName} sent: ${message.content}`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
