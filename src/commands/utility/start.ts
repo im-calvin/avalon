@@ -50,7 +50,7 @@ const startCommand = {
       return `${role}: ${members.map(member => member.user.username).join(', ')}`;
     }).join('\n');
 
-    console.log(`Playing Avalon with ${num} people, and roles: ${prettyRoleMemberMap}`);
+    console.log(`Playing Avalon with ${num} people, and roles: \n${prettyRoleMemberMap}`);
 
     for (const [role, members] of roleMemberMap) {
       for (const member of members) {
