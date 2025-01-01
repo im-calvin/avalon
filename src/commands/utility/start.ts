@@ -76,6 +76,7 @@ const startCommand = {
         }
       }
     }
+    await interaction.reply('Game started! Check your DMs for your role!');
   },
 };
 
