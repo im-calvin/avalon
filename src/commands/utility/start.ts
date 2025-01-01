@@ -45,12 +45,22 @@ const startCommand = {
       }
       roleMemberMap.set(shuffledRoles[i], [...(roleMemberMap.get(shuffledRoles[i]) || []), member]);
     }
-    console.log(roleMemberMap);
+
+    const prettyRoleMemberMap = [...roleMemberMap.entries()].map(([role, members]) => {
+      return `${role}: ${members.map(member => member.user.username).join(', ')}`;
+    }).join('\n');
+
+    console.log(`Playing Avalon with ${num} people, and roles: ${prettyRoleMemberMap}`);
 
     for (const [role, members] of roleMemberMap) {
       for (const member of members) {
         const dmChannel = await member.createDM(true);
-        await dmChannel.send(`You are ${role}`);
+        try {
+          await dmChannel.send(`You are ${role}`);
+        } catch (e) {
+          console.error(`Failed to send DM to ${member.user.username}`);
+          await interaction.reply(`Failed to send DM to ${member.user.username}`);
+        }
         const sees = avalonCharacters[role].sees.map(seenCharacter => {
           const members = roleMemberMap.get(seenCharacter);
           if (!members) {
