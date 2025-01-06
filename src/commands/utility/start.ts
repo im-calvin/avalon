@@ -79,10 +79,10 @@ const startCommand = {
         if (sees) {
           message += `\nYou see: ${sees}`;
         }
-        await dmChannel.send(`You see: ${sees}`);
+        await dmChannel.send(message);
       }
     }
-    await interaction.reply('Game started! Check your DMs for your role!');
+    await interaction.editReply({content: 'Game started! Check your DMs for your role!'});
   },
 };
 
