@@ -14,6 +14,8 @@ const startCommand = {
       return; // the interaction is not in a guild
     }
 
+    await interaction.deferReply({ephemeral: true});
+
     const textChannel = await interaction.channel.fetch() as TextChannel;
 
     const fetchedMembers = await textChannel.guild.members.fetch();
