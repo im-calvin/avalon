@@ -22,12 +22,12 @@ const startCommand = {
 
     const num = members.size;
 
-    if (num < 5 || num > 10) {
+    if (num < 5) {
       await interaction.reply('Not enough players to start a game of Avalon!');
       return;
     }
 
-    const roles = numPlayersToRoles[num as 5 | 6 | 7 | 8 | 9 | 10];
+    const roles = numPlayersToRoles[num as 5 | 6 | 7 | 8 | 9 | 10 | 11];
 
     const shuffledRoles = roles.sort(() => Math.random() - 0.5);
     const shuffledMembers = members.sort(() => Math.random() - 0.5);
@@ -47,19 +47,22 @@ const startCommand = {
     }
 
     const prettyRoleMemberMap = [...roleMemberMap.entries()].map(([role, members]) => {
-      return `${role}: ${members.map(member => member.user.username).join(', ')}`;
+      return `${role}: ${members.map(member => member.user.displayName).join(', ')}`;
     }).join('\n');
 
     console.log(`Playing Avalon with ${num} people, and roles: \n${prettyRoleMemberMap}`);
 
+    
     for (const [role, members] of roleMemberMap) {
       for (const member of members) {
+        let message = ''
         const dmChannel = await member.createDM(true);
         try {
+          message += `You are ${role} (${avalonCharacters[role].allegiance})`;
           await dmChannel.send(`You are ${role}`);
         } catch (e) {
-          console.error(`Failed to send DM to ${member.user.username}`);
-          await interaction.reply(`Failed to send DM to ${member.user.username}`);
+          console.error(`Failed to send DM to ${member.user.displayName}`);
+          await interaction.reply(`Failed to send DM to ${member.user.displayName}`);
         }
         const sees = avalonCharacters[role].sees.map(seenCharacter => {
           const members = roleMemberMap.get(seenCharacter);
@@ -72,8 +75,9 @@ const startCommand = {
         .flat()
         .join(', ');
         if (sees) {
-          await dmChannel.send(`You see: ${sees}`);
+          message += `\nYou see: ${sees}`;
         }
+        await dmChannel.send(`You see: ${sees}`);
       }
     }
     await interaction.reply('Game started! Check your DMs for your role!');
