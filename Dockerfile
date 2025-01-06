@@ -17,7 +17,7 @@ RUN pnpm install
 COPY . .
 
 # Build the TypeScript code
-RUN npm run build
+RUN pnpm run build
 
 # Command to run the application
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
