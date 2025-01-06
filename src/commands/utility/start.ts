@@ -31,6 +31,8 @@ const startCommand = {
 
     const roles = numPlayersToRoles[num as 5 | 6 | 7 | 8 | 9 | 10 | 11];
 
+    await textChannel.send(`Starting a game of Avalon with ${num} players!\n Roles are: ${roles.join(', ')}`);
+
     const shuffledRoles = roles.sort(() => Math.random() - 0.5);
     const shuffledMembers = members.sort(() => Math.random() - 0.5);
     if (shuffledRoles.length !== shuffledMembers.size) {
