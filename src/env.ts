@@ -8,4 +8,4 @@ export const readEnv = (env: string): string => {
   throw new Error(`${env} was not found.`);
 };
 
-export const POLL_TIME_MS = 5000;
+export const POLL_TIME_MS = 30000;
