@@ -2,3 +2,5 @@ services:
   app:
     image: imcalvin/avalon:latest
     restart: always
+    env_file:
+      - stack.env
