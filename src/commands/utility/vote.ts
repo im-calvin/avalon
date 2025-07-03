@@ -10,6 +10,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { POLL_TIME_MS } from "../../env";
+import { generateRandomEmojis } from "../../utils";
 
 const voteCommand = {
   data: new SlashCommandBuilder().setName("vote").setDescription("Start vote"),
@@ -29,6 +30,8 @@ const voteCommand = {
 
     const textChannel = (await interaction.channel.fetch()) as TextChannel;
 
+    const teamEmojis = generateRandomEmojis(3);
+
     const joinButton = new ButtonBuilder()
       .setCustomId("join_vote")
       .setLabel("Join Vote 🙌")
@@ -45,9 +48,9 @@ const voteCommand = {
     );
 
     const joinMsg = await textChannel.send({
-      content: `Click the button below to join the vote! You have ${
+      content: `Click the button below to join the party! You have ${
         POLL_TIME_MS / 1000
-      } seconds to join.`,
+      } seconds to join. ${teamEmojis}`,
       components: [joinRow.toJSON()],
     });
 
@@ -67,12 +70,12 @@ const voteCommand = {
         if (member && !joinedUsers.has(member.id)) {
           joinedUsers.set(member.id, member);
           await interaction.reply({
-            content: "You've joined the party!",
+            content: `You've joined the ${teamEmojis} party!`,
             flags: MessageFlags.Ephemeral,
           });
         } else {
           await interaction.reply({
-            content: "You're already in the party!",
+            content: `You're already in the ${teamEmojis} party!`,
             flags: MessageFlags.Ephemeral,
           });
         }
@@ -80,12 +83,12 @@ const voteCommand = {
         if (member && joinedUsers.has(member.id)) {
           joinedUsers.delete(member.id);
           await interaction.reply({
-            content: "You've left the party!",
+            content: `You've left the ${teamEmojis} party!`,
             flags: MessageFlags.Ephemeral,
           });
         } else {
           await interaction.reply({
-            content: "You're not in the party!",
+            content: `You're not in the ${teamEmojis} party!`,
             flags: MessageFlags.Ephemeral,
           });
         }
@@ -104,7 +107,7 @@ const voteCommand = {
     const alert = await textChannel.send({
       content: `Voting has started. Party consists of: ${partyNames.join(
         ", "
-      )}`,
+      )} ${teamEmojis}`,
     });
 
     // send individual messages to each of the users waiting for them to vote
@@ -131,13 +134,13 @@ const voteCommand = {
         try {
           const dmChannel = await guildMember.createDM();
           const voteMsg = await dmChannel.send({
-            content: `Vote for the party`,
+            content: `Vote for the ${teamEmojis} party`,
             components: [vote_row.toJSON()],
           });
 
           const vote_collector = voteMsg.createMessageComponentCollector({
             componentType: ComponentType.Button,
-            time: 30_000, // 30 seconds
+            time: 10_000, // 10 seconds
           });
 
           vote_collector.on("collect", async (i) => {
@@ -164,10 +167,16 @@ const voteCommand = {
     console.log(voteResults);
 
     // voteResults now contains the votes ("pass" or "fail") keyed by user ID
+    // Randomize the order of vote results before displaying
+    const shuffledVotes = Array.from(voteResults.values())
+      .map((vote) => ({ vote, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ vote }) => vote);
+
     await textChannel.send({
-      content: `Votes have concluded. The results are: ${Array.from(
-        voteResults.values()
-      ).join(", ")}`,
+      content: `Votes have concluded. The results are: ${shuffledVotes.join(
+        ", "
+      )} ${teamEmojis}`,
     });
   },
 };

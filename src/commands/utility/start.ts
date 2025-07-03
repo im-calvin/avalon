@@ -15,6 +15,7 @@ import {
   AVALON_CHARACTERS,
 } from "../../avalon";
 import { POLL_TIME_MS } from "../../env";
+import { generateRandomEmojis } from "../../utils";
 
 const startCommand = {
   data: new SlashCommandBuilder()
@@ -37,6 +38,8 @@ const startCommand = {
     // start a poll, everybody who reacts to the poll plays the game (fixes the server owner viewing problem)
     const textChannel = (await interaction.channel.fetch()) as TextChannel;
 
+    const teamEmojis = generateRandomEmojis(3);
+
     const joinButton = new ButtonBuilder()
       .setCustomId("join_avalon")
       .setLabel("Join Avalon 🎲")
@@ -48,7 +51,7 @@ const startCommand = {
       // flags: MessageFlags.IsComponentsV2,
       content: `Click the button below to join the Avalon game! You have ${
         POLL_TIME_MS / 1000
-      } seconds to join.`,
+      } seconds to join. ${teamEmojis}`,
       components: [row.toJSON()],
     });
 
